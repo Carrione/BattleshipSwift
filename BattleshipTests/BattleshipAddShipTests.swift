@@ -3,8 +3,8 @@ import XCTest
 
 class BattleshipAddShipTests: XCTestCase {
     
-    let playerId1 = Battle.PlayerId.Player1
-    let playerId2 = Battle.PlayerId.Player2
+    let playerId1 = Battle.PlayerId.player1
+    let playerId2 = Battle.PlayerId.player2
     var b: Battle!
 
     override func setUp() {
@@ -19,42 +19,42 @@ class BattleshipAddShipTests: XCTestCase {
     }
 
     func testCanAddShip() {
-        var bp = b.addShip(Battle.Ship.Cruiser, playerId: Battle.PlayerId.Player1, y: 0, x: 0)
-        XCTAssertTrue(bp.message == Battle.Message.ShipPlaced, "new ship created")
+        let bp = b.addShip(Battle.Ship.cruiser, playerId: Battle.PlayerId.player1, y: 0, x: 0)
+        XCTAssertTrue(bp.message == Battle.Message.shipPlaced, "new ship created")
     }
 
     func testCanAdd() {
-        var bp = b.addShip(Battle.Ship.Carrier, playerId: Battle.PlayerId.Player1, y: 0, x: 0)
-        XCTAssertTrue(bp.message == Battle.Message.ShipPlaced, "can add if there is space")
+        let bp = b.addShip(Battle.Ship.carrier, playerId: Battle.PlayerId.player1, y: 0, x: 0)
+        XCTAssertTrue(bp.message == Battle.Message.shipPlaced, "can add if there is space")
     }
 
     func testPartiallyOnScreen() {
-        var bp = b.addShip(Battle.Ship.Carrier, playerId: Battle.PlayerId.Player1, y: 1, x: 0, isVertical: true)
-        XCTAssertTrue(bp.message == Battle.Message.ShipNotAllowedHere, "cant add the ship where it would be only partially on screen message:\(bp.message)")
+        let bp = b.addShip(Battle.Ship.carrier, playerId: Battle.PlayerId.player1, y: 1, x: 0, isVertical: true)
+        XCTAssertTrue(bp.message == Battle.Message.shipNotAllowedHere, "cant add the ship where it would be only partially on screen message:\(bp.message)")
     }
 
     func testOutOfBounds() {
-        var bp = b.addShip(Battle.Ship.Patrol, playerId: Battle.PlayerId.Player1, y: -10, x: -20)
-        XCTAssertTrue(bp.message == Battle.Message.ShipNotAllowedHere, "cant add the ship out of bounds")
+        let bp = b.addShip(Battle.Ship.patrol, playerId: Battle.PlayerId.player1, y: -10, x: -20)
+        XCTAssertTrue(bp.message == Battle.Message.shipNotAllowedHere, "cant add the ship out of bounds")
     }
 
     func testOnTopOfAnotherShip() {
-        var bp = b.addShip(Battle.Ship.Cruiser, playerId: Battle.PlayerId.Player1, y: 0, x: 0)
-        bp = bp.battle.addShip(Battle.Ship.Patrol, playerId: Battle.PlayerId.Player1, y: 0, x: 1)
-        XCTAssertTrue(bp.message == Battle.Message.ShipNotAllowedHere, "cant add the ship on top of another ship")
+        var bp = b.addShip(Battle.Ship.cruiser, playerId: Battle.PlayerId.player1, y: 0, x: 0)
+        bp = bp.battle.addShip(Battle.Ship.patrol, playerId: Battle.PlayerId.player1, y: 0, x: 1)
+        XCTAssertTrue(bp.message == Battle.Message.shipNotAllowedHere, "cant add the ship on top of another ship")
     }
 
     func testShipAlreadyPlaced() {
-        var bp = b.addShip(Battle.Ship.Carrier, playerId: Battle.PlayerId.Player1, y: 0, x: 0)
-        bp = bp.battle.addShip(Battle.Ship.Carrier, playerId: Battle.PlayerId.Player1, y: 1, x: 0)
-        XCTAssertTrue(bp.message == Battle.Message.ShipAlreadyPlaced, "cannot place a ship twice")
+        var bp = b.addShip(Battle.Ship.carrier, playerId: Battle.PlayerId.player1, y: 0, x: 0)
+        bp = bp.battle.addShip(Battle.Ship.carrier, playerId: Battle.PlayerId.player1, y: 1, x: 0)
+        XCTAssertTrue(bp.message == Battle.Message.shipAlreadyPlaced, "cannot place a ship twice")
     }
     
     func testRandomBoard() {
         let b = Battle()
         var battleOperation = b.randomBoardForPlayerId(playerId1)
         battleOperation = battleOperation.battle.randomBoardForPlayerId(playerId2)
-        XCTAssertTrue(battleOperation.battle.battleState == Battle.BattleState.SetupComplete, "random board with all ships")
+        XCTAssertTrue(battleOperation.battle.battleState == Battle.BattleState.setupComplete, "random board with all ships")
         battleOperation.battle.printBattle()
     }
     

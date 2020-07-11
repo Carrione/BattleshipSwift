@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		65020F0E1A97F410000468C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65020F0D1A97F410000468C4 /* AppDelegate.swift */; };
-		65020F101A97F410000468C4 /* BattleViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65020F0F1A97F410000468C4 /* BattleViewCtrl.swift */; };
+		65020F101A97F410000468C4 /* BattleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65020F0F1A97F410000468C4 /* BattleViewController.swift */; };
 		65020F131A97F410000468C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65020F111A97F410000468C4 /* Main.storyboard */; };
 		65020F151A97F410000468C4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65020F141A97F410000468C4 /* Images.xcassets */; };
 		65020F181A97F410000468C4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65020F161A97F410000468C4 /* LaunchScreen.xib */; };
@@ -16,7 +16,7 @@
 		65020F2E1A97F459000468C4 /* Battle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65020F2D1A97F459000468C4 /* Battle.swift */; };
 		65020F2F1A97F8F5000468C4 /* Battle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65020F2D1A97F459000468C4 /* Battle.swift */; };
 		6517685E1A9AF22F0013B160 /* BattleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6517685D1A9AF22F0013B160 /* BattleViewModel.swift */; };
-		651768621A9AFED90013B160 /* BoardCollectionViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651768611A9AFED90013B160 /* BoardCollectionViewCtrl.swift */; };
+		651768621A9AFED90013B160 /* BoardCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651768611A9AFED90013B160 /* BoardCollectionViewController.swift */; };
 		651768641A9B036F0013B160 /* BoardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651768631A9B036F0013B160 /* BoardCollectionViewCell.swift */; };
 		654EF1511A98A76500501F08 /* BattleshipBattleStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EF1501A98A76500501F08 /* BattleshipBattleStateTests.swift */; };
 /* End PBXBuildFile section */
@@ -35,7 +35,7 @@
 		65020F081A97F410000468C4 /* Battleship.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Battleship.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65020F0C1A97F410000468C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65020F0D1A97F410000468C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		65020F0F1A97F410000468C4 /* BattleViewCtrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleViewCtrl.swift; sourceTree = "<group>"; };
+		65020F0F1A97F410000468C4 /* BattleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleViewController.swift; sourceTree = "<group>"; };
 		65020F121A97F410000468C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		65020F141A97F410000468C4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		65020F171A97F410000468C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -44,7 +44,7 @@
 		65020F231A97F411000468C4 /* BattleshipAddShipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleshipAddShipTests.swift; sourceTree = "<group>"; };
 		65020F2D1A97F459000468C4 /* Battle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Battle.swift; sourceTree = "<group>"; };
 		6517685D1A9AF22F0013B160 /* BattleViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleViewModel.swift; sourceTree = "<group>"; };
-		651768611A9AFED90013B160 /* BoardCollectionViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCollectionViewCtrl.swift; sourceTree = "<group>"; };
+		651768611A9AFED90013B160 /* BoardCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCollectionViewController.swift; sourceTree = "<group>"; };
 		651768631A9B036F0013B160 /* BoardCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCollectionViewCell.swift; sourceTree = "<group>"; };
 		654EF1501A98A76500501F08 /* BattleshipBattleStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleshipBattleStateTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,9 +94,9 @@
 				65020F161A97F410000468C4 /* LaunchScreen.xib */,
 				65020F0B1A97F410000468C4 /* Supporting Files */,
 				65020F2D1A97F459000468C4 /* Battle.swift */,
-				65020F0F1A97F410000468C4 /* BattleViewCtrl.swift */,
+				65020F0F1A97F410000468C4 /* BattleViewController.swift */,
 				6517685D1A9AF22F0013B160 /* BattleViewModel.swift */,
-				651768611A9AFED90013B160 /* BoardCollectionViewCtrl.swift */,
+				651768611A9AFED90013B160 /* BoardCollectionViewController.swift */,
 				651768631A9B036F0013B160 /* BoardCollectionViewCell.swift */,
 			);
 			path = Battleship;
@@ -177,7 +177,7 @@
 				TargetAttributes = {
 					65020F071A97F410000468C4 = {
 						CreatedOnToolsVersion = 6.3;
-						DevelopmentTeam = V3EJKL463M;
+						DevelopmentTeam = Z5YYRR5JK5;
 					};
 					65020F1C1A97F411000468C4 = {
 						CreatedOnToolsVersion = 6.3;
@@ -190,6 +190,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -230,11 +231,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				651768641A9B036F0013B160 /* BoardCollectionViewCell.swift in Sources */,
-				65020F101A97F410000468C4 /* BattleViewCtrl.swift in Sources */,
+				65020F101A97F410000468C4 /* BattleViewController.swift in Sources */,
 				65020F0E1A97F410000468C4 /* AppDelegate.swift in Sources */,
 				65020F2E1A97F459000468C4 /* Battle.swift in Sources */,
 				6517685E1A9AF22F0013B160 /* BattleViewModel.swift in Sources */,
-				651768621A9AFED90013B160 /* BoardCollectionViewCtrl.swift in Sources */,
+				651768621A9AFED90013B160 /* BoardCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,7 +314,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -351,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -364,9 +365,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Z5YYRR5JK5;
 				INFOPLIST_FILE = Battleship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.carrione.Battleship;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -376,9 +380,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Z5YYRR5JK5;
 				INFOPLIST_FILE = Battleship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.carrione.Battleship;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

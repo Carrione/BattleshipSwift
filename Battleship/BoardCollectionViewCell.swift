@@ -2,8 +2,16 @@ import UIKit
 
 class BoardCollectionViewCell: UICollectionViewCell {
     
+    static var identifier: String {
+        Self.description()
+    }
+    
     @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var xLabel: UILabel!
     
-    @IBOutlet weak var xLabel: UILabel! // represents a sunk ship
-    
+    func update(textLabelText: String, xLabelText: String) {
+        textLabel.text = textLabelText
+        // xLabel represents a sunk ship
+        xLabel.text = xLabelText
+    }
 }

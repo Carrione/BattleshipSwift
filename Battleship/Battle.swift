@@ -7,94 +7,105 @@ class Battle {
 
     typealias BoardType = [[SeaScape]] // 2D board with ships, water and misses on it (Hits are on Ships!)
     
-    // all the various items you can have on the sea
-    enum SeaScape: Printable {
-        case Water, Miss
-        case ShipSectionNominal(Ship)
-        case ShipSectionDamaged(Ship)
-        case ShipSectionSunk(Ship)
+    /// all the various items you can have on the sea
+    enum SeaScape {
+        case water, miss
+        case shipSectionNominal(Ship)
+        case shipSectionDamaged(Ship)
+        case shipSectionSunk(Ship)
+        
         var description: String {
             switch self {
-            case .Water: return "_"
-            case .Miss: return "~"
-            case let .ShipSectionNominal(s): return s.description
-            case .ShipSectionDamaged(_): return "X"
-            case let .ShipSectionSunk(s): return s.description.lowercaseString
+            case .water: return "_"
+            case .miss: return "~"
+            case .shipSectionNominal(let ship): return ship.description
+            case .shipSectionDamaged(_): return "X"
+            case .shipSectionSunk(let ship): return ship.description.lowercased()
             }
         }
-        var isNominal: Bool { // the ship section is undamaged
+        
+        /// the ship section is undamaged
+        var isNominal: Bool {
             switch self {
-            case .ShipSectionNominal(_): return true
+            case .shipSectionNominal(_): return true
             default: return false
             }
         }
+        
         var isShip: Bool {
             switch self {
-            case .ShipSectionNominal(_), .ShipSectionDamaged(_), .ShipSectionSunk(_): return true
+            case .shipSectionNominal(_), .shipSectionDamaged(_), .shipSectionSunk(_): return true
             default: return false
             }
         }
     }
 
-    // types of ship that can go on the sea
-    enum Ship: String, Printable  {
-        case Carrier = "A", Battleship = "B", Submarine = "S", Cruiser = "C", Patrol = "P"
+    /// types of ship that can go on the sea
+    enum Ship: String  {
+        case carrier = "A", battleship = "B", submarine = "S", cruiser = "C", patrol = "P"
+        
         var description : String {
             return self.rawValue
         }
-        var shipLength: Int {
+        
+        var length: Int {
             switch self {
-            case .Carrier: return 5
-            case .Battleship: return 4
-            case .Submarine: return 3
-            case .Cruiser: return 2
-            case .Patrol: return 1
+            case .carrier: return 5
+            case .battleship: return 4
+            case .submarine: return 3
+            case .cruiser: return 2
+            case .patrol: return 1
             }
         }
+        
         static var allShips: [Ship] {
-            return [Battle.Ship.Carrier, Battle.Ship.Battleship, Battle.Ship.Submarine, Battle.Ship.Cruiser, Battle.Ship.Patrol]
+            return [.carrier, .battleship, .submarine, .cruiser, .patrol]
         }
-        static var nrOfShips: Int {
+        
+        static var numberOfShips: Int {
             return allShips.count
         }
     }
 
-    // battleState to go in one direction only ->
-    enum BattleState: String, Printable  {
-        case Setup = "Setup", SetupComplete = "SetupComplete", Playing = "Playing", GameOver = "GameOver"
+    /// battleState to go in one direction only ->
+    enum BattleState: String  {
+        case setup = "Setup", setupComplete = "SetupComplete", playing = "Playing", gameOver = "GameOver"
+        
         var description : String {
             return self.rawValue
         }
     }
     
-    // messages to allow api users to get a little information about what went right or wrong
-    enum Message: String, Printable {
-        case Hit = "Hit", Miss = "Miss"
-        case HitSameSpot = "HitSameSpot", MissSameSpot = "MissSameSpot", ShotOutOfBounds = "ShotOutOfBounds"
-        case ShipNotAllowedHere = "ShipNotAllowedHere", ShipAlreadyPlaced = "ShipAlreadyPlaced"
-        case ShipPlaced = "ShipPlaced", AllShipsPlaced = "AllShipsPlaced"
-        case GameStarted = "gameHasStarted", GameNotInPlay = "GameNotInPlay", NotThisPlayersTurn = "NotThisPlayersTurn"
+    /// messages to allow api users to get a little information about what went right or wrong
+    enum Message: String {
+        case hit = "Hit", miss = "Miss"
+        case hitSameSpot = "HitSameSpot", missSameSpot = "MissSameSpot", shotOutOfBounds = "ShotOutOfBounds"
+        case shipNotAllowedHere = "ShipNotAllowedHere", shipAlreadyPlaced = "ShipAlreadyPlaced"
+        case shipPlaced = "ShipPlaced", allShipsPlaced = "AllShipsPlaced"
+        case gameStarted = "GameHasStarted", gameNotInPlay = "GameNotInPlay", notThisPlayersTurn = "NotThisPlayersTurn"
+        
         var description : String {
             return self.rawValue
         }
     }
     
-    // communicate the result of an operation on the battle, along with an updated battle object
+    /// communicate the result of an operation on the battle, along with an updated battle object
     struct BattleOperation {
         let message: Message
         let battle: Battle
         let justSunk: Ship?
         
-        init(message: Message, battle: Battle, justSunk: Ship? = .None) {
+        init(message: Message, battle: Battle, justSunk: Ship? = nil) {
             self.message = message
             self.battle = battle
             self.justSunk = justSunk
         }
     }
     
-    // alowed players
-    enum PlayerId: String, Printable {
-        case Player1 = "Player1", Player2 = "Player2"
+    /// alowed players
+    enum PlayerId: String {
+        case player1 = "Player1", player2 = "Player2"
+        
         var description : String {
             return self.rawValue
         }
@@ -102,281 +113,337 @@ class Battle {
     
     // these are the three obects that will change, each time a new battle object is generated
     private let battleStore: BattleStore
-    private let idShotLast: PlayerId?
+    private let lastShooterId: PlayerId?
     let battleState: BattleState
     
     // next point of a battle
-    private init(battleStore: BattleStore, battleState: BattleState, idShotLast: PlayerId?) {
+    private init(battleStore: BattleStore, battleState: BattleState, lastShooterId: PlayerId?) {
         self.battleStore = battleStore
-        self.idShotLast = idShotLast
+        self.lastShooterId = lastShooterId
         self.battleState = battleState
     }
     
-    // yup you can create a different sized board, but 10 * 10 is good
+    /// yup you can create a different sized board, but 10 * 10 is good
     convenience init(yDim: Int = 10, xDim: Int = 10) {
-        self.init(battleStore: BattleStore(yDim: yDim, xDim: xDim), battleState: BattleState.Setup, idShotLast: .None)
+        self.init(battleStore: BattleStore(yDim: yDim, xDim: xDim), battleState: BattleState.setup, lastShooterId: .none)
     }
 
-    // battle state is changing, so create a new battle for this point in time
-    private func newBattle(playerId: PlayerId, board: BoardType, firedOnByPlayerId: PlayerId? = .None, didLose: Bool = false) -> Battle {
+    /// battle state is changing, so create a new battle for this point in time
+    private func newBattle(playerId: PlayerId, board: BoardType, firedOnByPlayerId: PlayerId?, didLose: Bool = false) -> Battle {
         
         var newBattleStore = battleStore // this makes the "new" structure mutable
-        newBattleStore.setBoard(board, forPlayerId: playerId) // update the board
+        newBattleStore.setBoard(board: board, forPlayerId: playerId) // update the board
         
         let newBattleState: BattleState
         switch battleState {
-        case .Setup where newBattleStore.setupComplete(): newBattleState = .SetupComplete
-        case .SetupComplete where firedOnByPlayerId != nil: newBattleState = .Playing
-        case .Playing where didLose: newBattleState = .GameOver
-        default: newBattleState = battleState
+        case .setup where newBattleStore.setupComplete():
+            newBattleState = .setupComplete
+        case .setupComplete where firedOnByPlayerId != nil:
+            newBattleState = .playing
+        case .playing where didLose:
+            newBattleState = .gameOver
+        default:
+            newBattleState = battleState
         }
         
-        return Battle(battleStore: newBattleStore, battleState: newBattleState, idShotLast: firedOnByPlayerId ?? idShotLast)
+        return Battle(battleStore: newBattleStore, battleState: newBattleState, lastShooterId: firedOnByPlayerId ?? lastShooterId)
     }
 
-    // add a ship, but only for the setup stage and only if its not already added, is not on another ship or off the board
-    func addShip(ship: Ship, playerId: PlayerId, y: Int, x: Int, isVertical: Bool = false) -> BattleOperation {
+    /// add a ship, but only for the setup stage and only if its not already added, is not on another ship or off the board
+    func addShip(_ ship: Ship, playerId: PlayerId, y: Int, x: Int, isVertical: Bool = false) -> BattleOperation {
         
         let board = battleStore.boardForPlayerId(playerId)
         switch battleStore.stateForPlayerId(playerId) {
-        case .BoardSetupComplete: return BattleOperation(message:.AllShipsPlaced, battle: self)
-        case .BoardSetup where BattleStore.isShip(ship, onBoard: board): return BattleOperation(message:.ShipAlreadyPlaced, battle: self)
-        default: ()
+        case .boardSetupComplete:
+            return BattleOperation(message:.allShipsPlaced, battle: self)
+        case .boardSetup where BattleStore.isShip(ship: ship, onBoard: board):
+            return BattleOperation(message:.shipAlreadyPlaced, battle: self)
+        default: break
         }
         
-        if let pairs = BattleStore.pairsOverWaterForBoard(board, isVertical: isVertical, y: y, x: x, len: ship.shipLength) {
+        if let pairs = BattleStore.pairsOverWaterForBoard(board,
+                                                          isVertical: isVertical,
+                                                          y: y,
+                                                          x: x,
+                                                          len: ship.length) {
             var vBoard = board
             for (y, x) in pairs {
-                vBoard[y][x] = SeaScape.ShipSectionNominal(ship)
+                vBoard[y][x] = SeaScape.shipSectionNominal(ship)
             }
         
-            return BattleOperation(message:.ShipPlaced, battle: newBattle(playerId, board: vBoard))
+            return BattleOperation(message:.shipPlaced, battle: newBattle(playerId: playerId,
+                                                                          board: vBoard,
+                                                                          firedOnByPlayerId: nil))
         } else {
-            return BattleOperation(message:.ShipNotAllowedHere, battle: self)
+            return BattleOperation(message:.shipNotAllowedHere, battle: self)
         }
     }
     
-    // after all Ships are placed, the first shot will start the game
-    // when the opponent has no Ships left on the board, the game will complete
-    func shootAtPlayerId(playerId: PlayerId, y: Int, x: Int) -> BattleOperation {
+    // After all Ships are placed, the first shot will start the game. When the opponent has no Ships left on the board, the game will complete
+    
+    func shootAtPlayerId(_ targetPlayerId: PlayerId, y: Int, x: Int) -> BattleOperation {
         
-        let firingPlayerId = playerId == PlayerId.Player1 ? PlayerId.Player2 : PlayerId.Player1
+        let firingPlayerId: PlayerId = targetPlayerId == .player1 ? .player2 : .player1
         switch battleState {
-        case .Playing, .SetupComplete:
-            switch idShotLast {
-            case .Some(firingPlayerId): return BattleOperation(message:.NotThisPlayersTurn, battle: self)
-            default: ()
+        case .playing, .setupComplete:
+            // https://stackoverflow.com/questions/26941529/swift-testing-against-optional-value-in-switch-case
+            switch lastShooterId {
+            case .some(firingPlayerId):
+                return BattleOperation(message:.notThisPlayersTurn, battle: self)
+            default: break
             }
-        default: return BattleOperation(message:.GameNotInPlay, battle: self)
+        default:
+            return BattleOperation(message:.gameNotInPlay, battle: self)
         }
         
-        var vBoard = battleStore.boardForPlayerId(playerId)
-        var vDidLose = false
-        var vJustSunk: Ship? = .None
+        var targetPlayerBoard = battleStore.boardForPlayerId(targetPlayerId)
+        var didLose = false
+        var justSunk: Ship?
         let message: Message
-        switch vBoard[y][x] {
-        case let .ShipSectionNominal(ship):
-            message = .Hit
-            vBoard[y][x] = .ShipSectionDamaged(ship)
-            if !BattleStore.isNominalShip(ship, onBoard: vBoard) { // check if its sunk
-                vBoard = BattleStore.sinkShip(ship, onBoard: vBoard)
-                vDidLose = BattleStore.nrOfNominalShipsOnBoard(vBoard) == 0
-                vJustSunk = ship
+        switch targetPlayerBoard[y][x] {
+        case .shipSectionNominal(let ship):
+            message = .hit
+            targetPlayerBoard[y][x] = .shipSectionDamaged(ship)
+            if !BattleStore.isNominalShip(ship, onBoard: targetPlayerBoard) { // check if its sunk
+                targetPlayerBoard = BattleStore.sinkShip(ship, onBoard: targetPlayerBoard)
+                didLose = BattleStore.nrOfNominalShipsOnBoard(targetPlayerBoard) == 0
+                justSunk = ship
             }
-        case .ShipSectionDamaged(_), .ShipSectionSunk(_):
-            message = .HitSameSpot
-        case .Water:
-            message = .Miss
-            vBoard[y][x] = .Miss
-        case .Miss:
-            message = .MissSameSpot
+        case .shipSectionDamaged(_), .shipSectionSunk(_):
+            message = .hitSameSpot
+        case .water:
+            message = .miss
+            targetPlayerBoard[y][x] = .miss
+        case .miss:
+            message = .missSameSpot
         }
         
         return BattleOperation(message: message,
-                                battle: newBattle(playerId, board: vBoard, firedOnByPlayerId: firingPlayerId, didLose: vDidLose),
-                              justSunk: vJustSunk)
+                               battle: newBattle(playerId: targetPlayerId,
+                                                 board: targetPlayerBoard,
+                                                 firedOnByPlayerId: firingPlayerId,
+                                                 didLose: didLose),
+                              justSunk: justSunk)
     }
     
-    // randomly set the ships, has the potential to fail, if the board is too small to fit all the ships
-    func randomBoardForPlayerId(playerId: PlayerId, ships: [Battle.Ship] = Battle.Ship.allShips) -> BattleOperation {
+    /// randomly set the ships, has the potential to fail, if the board is too small to fit all the ships
+    func randomBoardForPlayerId(_ playerId: PlayerId, ships: [Ship] = Ship.allShips) -> BattleOperation {
         
         if ships.count == 0 {
-            return BattleOperation(message: Battle.Message.AllShipsPlaced, battle: self)
+            return BattleOperation(message: .allShipsPlaced, battle: self)
         }
         let board = battleStore.boardForPlayerId(playerId)
         let ship = ships[0]
-        let restOfShips = Array(dropFirst(ships))
+        let restOfShips = Array(ships.dropFirst())
         
         let potentialPositions = BattleStore.pairsForBoard(board) // all y,x pairs for the board
         let pairs: [(y: Int, x: Int)]
-        let isVertical: Bool = arc4random() % 2 == 0
-        pairs = potentialPositions.filter {BattleStore.pairsOverWaterForBoard(board, isVertical: isVertical, y: $0.y, x: $0.x, len: ship.shipLength) != nil}
+        let isVertical = Bool.random()
+        pairs = potentialPositions.filter {
+            let overWaterPairs = BattleStore.pairsOverWaterForBoard(board,
+                                                                    isVertical: isVertical,
+                                                                    y: $0.y,
+                                                                    x: $0.x,
+                                                                    len: ship.length)
+            return overWaterPairs != nil
+        }
   
-        let randomPairs = sorted(pairs) {_, _ in arc4random() % 2 == 0}
-        for pair in randomPairs {
+        let randomSortedPairs = pairs.sorted { _,_ in Bool.random() }
+        for pair in randomSortedPairs {
             let battleOperation = addShip(ship, playerId: playerId, y: pair.y, x: pair.x, isVertical: isVertical)
-            if (battleOperation.message == Battle.Message.ShipNotAllowedHere) {
+            if battleOperation.message == .shipNotAllowedHere {
                 NSLog("all the pairs should be ok: pair generation error")
             }
             switch battleOperation.battle.randomBoardForPlayerId(playerId, ships: restOfShips) {
-            case let battleOperation where battleOperation.message == Battle.Message.AllShipsPlaced: return battleOperation
-            default: ()
+            case let battleOperation where battleOperation.message == .allShipsPlaced:
+                return battleOperation
+            default:
+                break
             }
         }
-        return BattleOperation(message: Battle.Message.ShipNotAllowedHere, battle: self)
+        return BattleOperation(message: .shipNotAllowedHere, battle: self)
     }
     
-    // accessor to a board for api
-    func boardForPlayerId(playerId: PlayerId) -> BoardType {
+    /// accessor to a board for api
+    func boardForPlayerId(_ playerId: PlayerId) -> BoardType {
         return battleStore.boardForPlayerId(playerId)
     }
     
-    // just in case they want to know
+    /// just in case they want to know
     func whoWon() -> PlayerId? {
         switch battleState {
-        case .GameOver: return idShotLast
-        default: return nil
+        case .gameOver:
+            return lastShooterId
+        default:
+            return nil
         }
     }
     
-    // store for player's boards and operations on boards
+    /// store for player's boards and operations on boards
     private struct BattleStore {
-        enum BoardState  {  // represents state of a individual board
-            case BoardSetup, BoardSetupComplete
+        enum BoardState  {
+            case boardSetup, boardSetupComplete
         }
         
-        private var board1: BoardType // player1 boards (was going to use a dictionary, but swift 1.2 beta and dictionaries are currently buggy)
-        private var board2: BoardType
+        /// players' boards
+        private var boards: [PlayerId: BoardType] = [:]
         
         init(yDim: Int = 10, xDim: Int = 10) {
-            let emptyRow = [SeaScape](count: xDim, repeatedValue: SeaScape.Water)
-            board1 = BoardType(count: yDim, repeatedValue: emptyRow) // setting up multi dimentional arrays
-            board2 = board1
+            let emptyRow = [SeaScape](repeating: .water, count: xDim)
+            let board = BoardType(repeating: emptyRow, count: yDim) // setting up multi dimentional arrays
+            boards[.player1] = board
+            boards[.player2] = board
         }
         
-        // update the board for one player. It's a value object, so this isn't going to trample on anyone
+        /// update the board for one player. It's a value object, so this isn't going to trample on anyone
         mutating func setBoard(board: BoardType, forPlayerId: PlayerId) {
-            switch forPlayerId {
-            case .Player1: board1 = board
-            case .Player2: board2 = board
+            boards[forPlayerId] = board
+        }
+        
+        func boardForPlayerId(_ playerId: PlayerId) -> BoardType {
+            guard let board = boards[playerId] else {
+                // TODO: handle error
+                print("Board for player id \(playerId) doesn't exists")
+                return BoardType()
             }
+            return board
         }
         
-        func boardForPlayerId(playerId: PlayerId) -> BoardType {
-            return playerId == PlayerId.Player1 ? board1 : board2
-        }
-        
-        // have all the ships been placed for all players
+        /// have all the ships been placed for all players
         func setupComplete() -> Bool {
-            return stateForPlayerId(PlayerId.Player1) == .BoardSetupComplete &&  stateForPlayerId(PlayerId.Player2) == .BoardSetupComplete
+            return stateForPlayerId(.player1) == .boardSetupComplete &&
+                stateForPlayerId(.player2) == .boardSetupComplete
         }
         
-        // has all the ships been placed for this player
-        func stateForPlayerId(playerId: PlayerId) -> BoardState {
-            return BattleStore.nrOfShipsOnBoard(boardForPlayerId(playerId)) == Ship.nrOfShips ? BoardState.BoardSetupComplete : .BoardSetup
+        /// has all the ships been placed for this player
+        func stateForPlayerId(_ playerId: PlayerId) -> BoardState {
+            return BattleStore.numberOfShipsOnBoard(boardForPlayerId(playerId)) == Ship.numberOfShips ? .boardSetupComplete : .boardSetup
         }
         
         // helper functions. These are static to help indicate they are just pure functions
         
-        static func isNominalShip(ship: Ship, onBoard: BoardType) -> Bool {
+        static func isNominalShip(_ ship: Ship, onBoard: BoardType) -> Bool {
             // using description as contains doesnt want to play with enums, easily
             // swift has no flatmap, so use reduce
-            let shipSections = onBoard.reduce([], combine: +).filter{$0.isNominal && $0.description == ship.description}
+            let shipSections = onBoard.reduce([], +).filter {
+                $0.isNominal && $0.description == ship.description
+            }
             return shipSections.count > 0
         }
         
         static func isShip(ship: Ship, onBoard: BoardType) -> Bool {
-            let shipSections = onBoard.reduce([], combine: +).filter{$0.isShip && $0.description.uppercaseString == ship.description}
+            let shipSections = onBoard.reduce([], +).filter {
+                $0.isShip && $0.description.uppercased() == ship.description
+            }
             return shipSections.count > 0
         }
         
-        static func nrOfShipsOnBoard(board: BoardType) -> Int {
-            let shipSections = board.reduce([], combine: +).filter{$0.isShip}.map{$0.description.uppercaseString}
+        static func numberOfShipsOnBoard(_ board: BoardType) -> Int {
+            let shipSections = board.reduce([], +).filter {
+                $0.isShip
+            }.map {
+                $0.description.uppercased()
+            }
             return Set(shipSections).count
         }
         
-        static func nrOfNominalShipsOnBoard(board: BoardType) -> Int {
-            let shipSections = board.reduce([], combine: +).filter{$0.isNominal}.map{$0.description.uppercaseString}
+        static func nrOfNominalShipsOnBoard(_ board: BoardType) -> Int {
+            let shipSections = board.reduce([], +).filter {
+                $0.isNominal
+            }.map {
+                $0.description.uppercased()
+            }
             return Set(shipSections).count
         }
         
-        static let dimYx = {(board: BoardType) -> (yDim :Int, xDim: Int) in (yDim: board.count, xDim: board.count > 0 ? board[0].count : 0)}
+        static let dimYx = { (board: BoardType) -> (yDim :Int, xDim: Int) in
+            (yDim: board.count, xDim: board.count > 0 ? board[0].count : 0)
+        }
         
-        // get all the pairs for the whole board
-        static func pairsForBoard(board: BoardType) -> [(y: Int, x: Int)] {
+        /// get all the pairs for the whole board
+        static func pairsForBoard(_ board: BoardType) -> [(y: Int, x: Int)] {
             let dim = dimYx(board)
-            return (0 ..< dim.yDim).map {y in (0 ..< dim.xDim).map{(y: y, x: $0)}}.reduce([], combine: +)
+            return (0 ..< dim.yDim).map { y in
+                (0 ..< dim.xDim).map {
+                    (y: y, x: $0)
+                }
+            }.reduce([], +)
         }
         
-        // get the pairs that represent a particular ship
-        static func pairsForShip(ship: Ship, onBoard: BoardType) -> [(y: Int, x: Int)] {
+        /// get the pairs that represent a particular ship
+        static func pairsForShip(_ ship: Ship, onBoard: BoardType) -> [(y: Int, x: Int)] {
             let pairs = BattleStore.pairsForBoard(onBoard)
             return pairs.filter {y, x in
                 switch onBoard[y][x] {
-                case .ShipSectionNominal(ship), .ShipSectionDamaged(ship), .ShipSectionSunk(ship): return true
-                default: return false
+                case .shipSectionNominal(ship), .shipSectionDamaged(ship), .shipSectionSunk(ship):
+                    return true
+                default:
+                    return false
                 }
             }
         }
         
-        // sink every section of a ship
-        static func sinkShip(ship: Ship, onBoard: BoardType) -> BoardType {
-            var vBoard = onBoard
+        /// sink every section of a ship
+        static func sinkShip(_ ship: Ship, onBoard: BoardType) -> BoardType {
+            var board = onBoard
             for pair in BattleStore.pairsForShip(ship, onBoard: onBoard) {
-                vBoard[pair.y][pair.x] = .ShipSectionSunk(ship)
+                board[pair.y][pair.x] = .shipSectionSunk(ship)
             }
-            return vBoard
+            return board
         }
         
-        // checks that the generated pairs are over water
-        private static func pairsOverWaterForBoard(board: BoardType, pairs: [(y:Int, x:Int)]) -> [(y:Int, x:Int)]? {
+        /// checks that the generated pairs are over water
+        private static func pairsOverWaterForBoard(_ board: BoardType, pairs: [(y:Int, x:Int)]) -> [(y:Int, x:Int)]? {
             let dim = dimYx(board)
             for (y, x) in pairs {
                 if x < 0 || y < 0 || x >= dim.xDim || y >= dim.yDim {
                     return nil
                 }
                 switch board[y][x] {
-                case .Water: continue
-                default: return nil
+                case .water:
+                    continue
+                default:
+                    return nil
                 }
             }
             return pairs
         }
         
-        // generate pairs for a ship and check all the ship is over water
-        static func pairsOverWaterForBoard(board: BoardType, isVertical: Bool, y: Int, x: Int, len: Int) -> [(y:Int, x:Int)]? {
+        /// generate pairs for a ship and check all the ship is over water
+        static func pairsOverWaterForBoard(_ board: BoardType, isVertical: Bool, y: Int, x: Int, len: Int) -> [(y:Int, x:Int)]? {
             if isVertical {
                 return BattleStore.pairsOverWaterForBoard(board, pairs: (y ..< y + len).map { (y: $0, x: x) })
             } else {
                 return BattleStore.pairsOverWaterForBoard(board, pairs: (x ..< x + len).map { (y: y, x: $0) })
             }
         }
-        
     }
     
-    // pragma mark - just for testing/debugging
+    // Mark: - just for testing/debugging
     
     func printBattle() {
-        println("\nBattle State \(battleState)\n")
-        printBoard(PlayerId.Player1)
-        println("\n")
-        printBoard(PlayerId.Player2)
+        print("\nBattle State \(battleState)\n")
+        printBoard(playerId: .player1)
+        print("\n")
+        printBoard(playerId: .player2)
     }
     
     func printBoard(playerId: PlayerId) {
         let board = battleStore.boardForPlayerId(playerId)
         
-        func printBoard(board: Battle.BoardType) {
-            var vInc = 1
+        func printBoard(_ board: BoardType) {
+            var number = 0
             for boardRow in board {
-                println(boardRow.reduce("\(vInc++) ", combine:{"\($0) \($1)"}))
+                number += 1
+                print(boardRow.reduce("\(number) ", {"\($0) \($1)"}))
             }
         }
         
         let xDim = BattleStore.dimYx(board).xDim
         
-        let header = "   " + " ".join((1 ... xDim).map{$0.description})
-        println("\(header) \(playerId.description)")
+        let array = (1 ... xDim).map { $0.description }
+        let header = "   " + " " + array.joined()
+        print("\(header) \(playerId.description)")
         printBoard(board)
     }
     
@@ -390,8 +457,9 @@ func !=(a:Battle.SeaScape, b:Battle.SeaScape) -> Bool {
 
 func ==(a:Battle.SeaScape, b:Battle.SeaScape) -> Bool {
     switch(a, b) {
-    case (.Water, .Water), (.Miss, .Miss): return true
-    case let (s1, s2): return s1.description == s2.description
-    default: return false
+    case (.water, .water), (.miss, .miss):
+        return true
+    case let (s1, s2):
+        return s1.description == s2.description
     }
 }
