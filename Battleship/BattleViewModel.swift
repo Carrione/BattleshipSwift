@@ -17,7 +17,7 @@ class BattleViewModel {
     private let enemyPlayerId = Battle.PlayerId.player2
     private var bondAlly: BondPlayer // contains listeners, to inform controllers of changes
     private var bondEnemy: BondPlayer
-    private var randomIndexes: [Int] = []
+    private var randomIndices: [Int] = []
     private var enemyBattleStart: Battle // Battle that just has the enemy ship. Ally ships not yet deployed
     private var battle: Battle
 
@@ -83,21 +83,21 @@ class BattleViewModel {
         bondEnemy.updateBondArray(battle: battle)
         
         // shoot back, but not with much smarts
-        if randomIndexes.count < 1 {
-            randomIndexes = randomIndexes.sorted(by: { _, _ -> Bool in
+        if randomIndices.count < 1 {
+            randomIndices = randomIndices.sorted(by: { _, _ -> Bool in
                 // random sort from the lowest or highest
                 Bool.random()
             })
         }
-        let randomIndex = randomIndexes.last ?? 0
-        print("RANDCount: \(randomIndexes.count)")
-        randomIndexes.removeLast()
+        let randomIndex = randomIndices.last ?? 0
+        print("RandomIndicesCount: \(randomIndices.count)")
+        //randomIndexes.removeLast()
         let battleOperation = shootAtPlayerId(allyPlayerId, index: randomIndex)
         battle = battleOperation.battle
         bondAlly.updateBondArray(battle: battle)
         if battleOperation.message == .hit {
-            randomIndexes = nearbyWaterForHit(hitIndex: randomIndex,
-                                              randomIndexes: randomIndexes,
+            randomIndices = nearbyWaterForHit(hitIndex: randomIndex,
+                                              randomIndexes: randomIndices,
                                               board1D: bondAlly.board1D)
         }
 
@@ -147,6 +147,7 @@ class BattleViewModel {
             let array = board.reduce([], +)
             var indexes: [Int] = []
             for (index, element) in array.enumerated() {
+                // FIXME: must bee different for each player, it isn't different for enemy player
                 if (element != board1D[index]) {
                     board1D[index] = element
                     indexes.append(index)

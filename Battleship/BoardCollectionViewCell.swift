@@ -3,7 +3,8 @@ import UIKit
 class BoardCollectionViewCell: UICollectionViewCell {
     
     static var identifier: String {
-        Self.description()
+        //Self.description()
+        "BoardCollectionViewCell"
     }
     
     @IBOutlet weak var textLabel: UILabel!

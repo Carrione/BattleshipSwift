@@ -18,13 +18,13 @@ class BoardCollectionViewController: UICollectionViewController, UICollectionVie
             viewModel.restart() // setup first time
         }
         // listen and react to changes on the seascape array
-        viewModel.addUpdateListener(imThePlayer: imThePlayer) {[weak self] indices in
+        viewModel.addUpdateListener(imThePlayer: imThePlayer) {[weak self] changedIndices in
             
-            print("update " + (imThePlayer ? "player" : "enemy") + " indices:\(indices)")
+            print("update " + (imThePlayer ? "player" : "enemy") + " indices:\(changedIndices)")
             let playerOrEnemyStr = imThePlayer ? "player" : "enemy"
-            let paths = indices.map { IndexPath(item: $0, section: 0) }
+            let changedPaths = changedIndices.map { IndexPath(item: $0, section: 0) }
             //self?.collectionView.reloadData()
-            self?.collectionView?.reloadItems(at: paths)
+            self?.collectionView?.reloadItems(at: changedPaths)
             if let msg = viewModel.gameOverString() {
                 self?.newGameDialog(msg: msg)
             }
@@ -50,11 +50,6 @@ class BoardCollectionViewController: UICollectionViewController, UICollectionVie
             alertController.addAction(cancelAction)
         }
         self.present(alertController, animated: true) { }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        collectionView.register(BoardCollectionViewCell.self, forCellWithReuseIdentifier: BoardCollectionViewCell.identifier)
     }
     
     override func viewDidAppear(_ animated: Bool) {

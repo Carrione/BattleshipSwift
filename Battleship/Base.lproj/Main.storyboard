@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -68,7 +69,40 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
-                        <cells/>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="BoardCollectionViewCell" id="vdS-FB-cch" customClass="BoardCollectionViewCell" customModule="Battleship" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="kCR-Z8-AS6">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0F-gv-2xN">
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDZ-FM-n4b">
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="cDZ-FM-n4b" firstAttribute="centerX" secondItem="kCR-Z8-AS6" secondAttribute="centerX" id="7rU-5N-DBO"/>
+                                        <constraint firstItem="d0F-gv-2xN" firstAttribute="centerY" secondItem="kCR-Z8-AS6" secondAttribute="centerY" id="SLc-NR-8vr"/>
+                                        <constraint firstItem="cDZ-FM-n4b" firstAttribute="centerY" secondItem="kCR-Z8-AS6" secondAttribute="centerY" id="STg-1G-yYi"/>
+                                        <constraint firstItem="d0F-gv-2xN" firstAttribute="centerX" secondItem="kCR-Z8-AS6" secondAttribute="centerX" id="myd-GA-2df"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
+                                <connections>
+                                    <outlet property="textLabel" destination="d0F-gv-2xN" id="YWX-b9-s4A"/>
+                                    <outlet property="xLabel" destination="cDZ-FM-n4b" id="Rfd-8i-ggw"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
                         <connections>
                             <outlet property="dataSource" destination="YCT-s0-XgA" id="3pp-Ab-fqx"/>
                             <outlet property="delegate" destination="YCT-s0-XgA" id="d8s-RI-rbj"/>
